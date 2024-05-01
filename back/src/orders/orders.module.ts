@@ -9,18 +9,24 @@ import { UsersService } from "src/users/users.service";
 import { ProductsService } from "src/products/products.service";
 import { ProductsRepository } from "src/products/products.repository";
 import { UsersRepository } from "src/users/users.repository";
+import { User } from "src/users/users.entity";
+import { Product } from "src/products/products.entity";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Order])],
+    imports: [
+        TypeOrmModule.forFeature([OrderDetails]),
+        TypeOrmModule.forFeature([User]),
+        TypeOrmModule.forFeature([Product]),
+        TypeOrmModule.forFeature([Order]),
+                ],
     providers: [
         OrderRepository,
         OrderDetails,
-        OrdersService,
         UsersService,
         ProductsService,
+        UsersRepository,
         ProductsRepository,
-        UsersRepository
-        
+        OrdersService
     ],
     controllers: [OrdersController]
 })

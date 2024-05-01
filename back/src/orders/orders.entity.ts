@@ -1,6 +1,6 @@
 // order.entity.ts
 
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { User } from "src/users/users.entity";
 import { OrderDetails } from "src/orders/orderDetails.entity.";
 
@@ -10,12 +10,12 @@ export class Order {
     id: string;
 
     @OneToOne(() => OrderDetails, orderDetail => orderDetail.order)
-    @JoinColumn()
     orderDetails: OrderDetails;
 
     @Column({ type: "date" })
     date: Date;
 
-    @OneToOne(() => User, user => user.orders)
+    @ManyToOne(() => User, user => user.orders)
+    @JoinColumn({name: "user_id"})
     user: User;
 }

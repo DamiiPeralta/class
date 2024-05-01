@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from "typeorm";
 import { Order } from "src/orders/orders.entity"; 
 
 @Entity({ name: "users" })
@@ -15,7 +15,7 @@ export class User {
     @Column({ length: 20 })
     password: string;
 
-    @Column({ type: "integer" })
+    @Column({ type: "int" })
     phone: number;
 
     @Column({ length: 50 })
@@ -28,5 +28,6 @@ export class User {
     city: string;
 
     @OneToMany(() => Order, order => order.user)
+    @JoinColumn({name:"order_id"})
     orders: Order[];
 }

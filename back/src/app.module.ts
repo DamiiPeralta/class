@@ -7,6 +7,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from "./config/typeorm"
 import { OrderModule } from './orders/orders.module';
+import { ProductsService } from './products/products.service';
+import { UsersService } from './users/users.service';
+import { OrdersService } from './orders/orders.service';
 
 @Module({
   imports: [
@@ -17,7 +20,8 @@ import { OrderModule } from './orders/orders.module';
     }),
     TypeOrmModule.forRootAsync({
       inject:[ConfigService],
-      useFactory:(configService: ConfigService) => configService.get("typeorm")
+      useFactory:(configService: ConfigService) => 
+      configService.get("typeorm")
     }),
     UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule],
   controllers: [],

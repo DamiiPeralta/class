@@ -3,7 +3,6 @@ import { UsersService } from "./users.service";
 import { UsersController } from "./users.controller";
 import { LoggerMiddleware } from "src/midldleware/logger.middelware";
 import { UsersRepository } from "./users.repository";
-import { response } from "express";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users.entity";
 import { UsersDbService } from "./usersDb.service";
