@@ -15,6 +15,12 @@ export class ProductsController {
         return await this.productsService.getProducts();
     }
 
+    @Get('seeder')
+    @HttpCode(HttpStatus.CREATED)
+    async getAddHardProduct(){
+        return await this.productsService.addHardProduct();
+    }
+    
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     async getProductById(@Param('id') id: string): Promise<Product> {

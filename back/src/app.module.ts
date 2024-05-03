@@ -10,6 +10,7 @@ import { OrderModule } from './orders/orders.module';
 import { ProductsService } from './products/products.service';
 import { UsersService } from './users/users.service';
 import { OrdersService } from './orders/orders.service';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { OrdersService } from './orders/orders.service';
       useFactory:(configService: ConfigService) => 
       configService.get("typeorm")
     }),
-    UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule],
+    UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule, CategoriesModule],
   controllers: [],
   providers: [],
 })

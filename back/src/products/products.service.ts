@@ -12,6 +12,10 @@ export class ProductsService {
         return await this.productsRepository.getProducts();
     }
 
+    async addHardProduct(): Promise<string>{
+        return await this.productsRepository.addHardProducts();
+    }
+
     async getProductById(id: string): Promise<Product> {
         return await this.productsRepository.getProductById(id);
     }
@@ -27,4 +31,5 @@ export class ProductsService {
     async deleteProduct(id: string): Promise<void> {
         return await this.productsRepository.deleteProduct(id);
     }
+    
 }

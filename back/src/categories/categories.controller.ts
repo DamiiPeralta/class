@@ -9,7 +9,7 @@ export class CategoriesControllers{
     addCategories(){
         return this.CategoriesServices.addCategories()
     }
-
+    //
     @Get()
     getCategories(){
         return this.CategoriesServices.getCategories()

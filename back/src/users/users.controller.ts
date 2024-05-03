@@ -10,19 +10,19 @@ export class UsersController {
     constructor(private readonly usersService: UsersService,
         private readonly usersDbService: UsersDbService
     ) {}
-
+    //admin
     @Get()
     @UseGuards(AuthGuard) 
     async getUsers(@Query('page') page: number, @Query('limit') limit: number): Promise<{ users: User[], totalPages: number, totalCount: number }> {
         return await this.usersService.getUsers(page, limit);
     }
-
+    //admin
     @Get(':id')
     @UseGuards(AuthGuard) 
     async getUserById(@Param('id') id: string): Promise<User> {
         return await this.usersService.getUserById(id);
     }
-
+    //admin/user
     @Post()
     @HttpCode(HttpStatus.CREATED)
     async createUser(@Body() createUserDto: UserDto, @Req() request:Request & {now: string}): Promise<User> {
@@ -32,7 +32,7 @@ export class UsersController {
         const newUser = await this.usersService.createUser(createUserDto);
         return newUser;
     }
-
+    //admin/user
     @Put(':id')
     @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.OK)
@@ -43,7 +43,7 @@ export class UsersController {
         const userId = await this.usersService.updateUser(id, updateUserDto);
         return ;
     }
-
+    
     @Delete(':id')
     @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.OK)

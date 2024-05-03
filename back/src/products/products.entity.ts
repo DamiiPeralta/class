@@ -1,31 +1,55 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn, OneToMany } from "typeorm";
 import { Category } from "src/categories/categories.entity";
 import { OrderDetails } from "src/orders/orderDetails.entity.";
 
-@Entity({ name: "products" })
-export class Product {
-    @PrimaryGeneratedColumn("uuid")
+export class ColumnNumericTransformer {
+    to(data: number): number {
+      return data;
+    }
+    from(data: string): number {
+      return parseFloat(data);
+    }
+  }
+
+@Entity({
+    name: 'products',
+  })
+  export class Product {
+    @PrimaryGeneratedColumn('uuid')
     id: string;
-
-    @Column({ length: 50 })
+  
+    @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
     name: string;
-
-    @Column({ type: "text" })
+  
+    @Column({ type: 'text', nullable: false })
     description: string;
-
-    @Column({ type: "decimal", precision: 10, scale: 2 })
+  
+    @Column({
+      type: 'decimal',
+      precision: 10,
+      scale: 2,
+      nullable: false,
+      transformer: new ColumnNumericTransformer(),
+    })
     price: number;
-
-    @Column({ type: "integer" })
+  
+    @Column({ type: 'int', nullable: false })
     stock: number;
-
-    @Column({ nullable: true })
+  
+    @Column({
+      type: 'text',
+      nullable: true,
+      default:
+        'https://www.netambulo.com/storage/2011/12/404-not-found-gatito.jpg',
+    })
     imgUrl: string;
-
-    @ManyToOne(() => Category, category => category.products)
-    @JoinColumn({name:"category"})
+  
+    //* Products N:1 Categories
+    @ManyToOne(() => Category, (category) => category.products)
+    @JoinColumn({ name: 'category_id' })
     category: Category;
-
-    @ManyToMany(() => OrderDetails, orderDetails => orderDetails.products)
+  
+    //*Products N:N OrderDetails
+    @OneToMany(() => OrderDetails, (orderDetails) => orderDetails.products)
     orderDetails: OrderDetails[];
-}
+  }

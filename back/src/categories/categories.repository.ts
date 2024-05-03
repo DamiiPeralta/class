@@ -16,15 +16,16 @@ export class CategoriesRepository {
         return await this.categoriesRepository.find()
     }
 
-    async addCategories(){
-        data?.map(async(element) => {
-            await this.categoriesRepository
+    async addCategories(): Promise<string> {
+        data?.map(async (element) => {
+          await this.categoriesRepository
             .createQueryBuilder()
             .insert()
             .into(Category)
-            .values({name:element.category})
+            .values({ name: element.category })
             .orIgnore()
+            .execute();
         });
-        return 'Categorias Agregadas'
-    }
+        return 'Added Categories';
+      }
 }
