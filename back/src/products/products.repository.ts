@@ -6,7 +6,6 @@ import { ProductDto } from "./products.dto";
 import * as data from "../utils/data.json";
 import { Category } from "src/categories/categories.entity";
 
-
 @Injectable()
 export class ProductsRepository {
     constructor(
@@ -18,6 +17,14 @@ export class ProductsRepository {
 
     async getProducts(): Promise<Product[]> {
         return this.productsRepository.find();
+    }
+
+    async getStockOfProduct(name: string): Promise<string>{
+        const product = await this.productsRepository.findOne({where:({name})});
+        if(!product) {
+            throw new Error ('Producto no encontrado');
+        }
+        return `Quedan ${product.stock} unidades de este producto: ${product.name} `;
     }
 
     async getProductById(id: string): Promise<Product> {

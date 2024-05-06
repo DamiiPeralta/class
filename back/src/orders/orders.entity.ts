@@ -2,7 +2,8 @@
 
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { User } from "src/users/users.entity";
-import { OrderDetails } from "src/orders/orderDetails.entity.";
+import { OrderDetails } from "src/orders/orderDetails.entity";
+
 
 @Entity({ name: "orders" })
 export class Order {

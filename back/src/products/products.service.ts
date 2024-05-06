@@ -11,6 +11,10 @@ export class ProductsService {
     async getProducts(): Promise<Product[]> {
         return await this.productsRepository.getProducts();
     }
+    
+    async getStockOfProduct(name: string): Promise<string>{
+        return await this.productsRepository.getStockOfProduct(name);
+    }
 
     async addHardProduct(): Promise<string>{
         return await this.productsRepository.addHardProducts();

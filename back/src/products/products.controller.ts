@@ -15,6 +15,13 @@ export class ProductsController {
         return await this.productsService.getProducts();
     }
 
+    @Get(':name/stock')
+    async getStockOfProduct(@Param('name') name: string): Promise<string>{
+        const productName = name.replace(/-/g, ' ');
+        console.log(productName)
+        return await this.productsService.getStockOfProduct(productName);
+    }
+
     @Get('seeder')
     @HttpCode(HttpStatus.CREATED)
     async getAddHardProduct(){

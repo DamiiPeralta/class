@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn, OneToMany } from "typeorm";
 import { Category } from "src/categories/categories.entity";
-import { OrderDetails } from "src/orders/orderDetails.entity.";
+import { OrderDetails } from "src/orders/orderDetails.entity";
 
 export class ColumnNumericTransformer {
     to(data: number): number {

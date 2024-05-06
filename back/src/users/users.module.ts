@@ -32,8 +32,4 @@ import { UsersDbService } from "./usersDb.service";
     ],
     controllers: [UsersController]
 })
-export class UsersModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(LoggerMiddleware).forRoutes("users")
-    }
-}
+export class UsersModule{}

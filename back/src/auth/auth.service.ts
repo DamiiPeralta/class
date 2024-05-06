@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { AuthRepository } from "./auth.repository";
-import { UserDto } from "src/users/user.dto";
+import { CreateUserDto } from "src/users/user.dto";
 
 @Injectable()
 export class AuthService {
     constructor(private readonly authRepository: AuthRepository) {}
 
-    async signIn(userDto: UserDto): Promise<string> {
+    async signIn(userDto: CreateUserDto): Promise<string> {
 
         // Extraemos las credenciales del objeto UserDto
         const { email, password } = userDto;

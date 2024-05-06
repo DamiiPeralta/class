@@ -15,16 +15,16 @@ export class User {
     @Column({ length: 20 })
     password: string;
 
-    @Column({ type: "int" })
+    @Column({ type: "int" , nullable:true })
     phone: number;
 
-    @Column({ length: 50 })
+    @Column({ length: 50, nullable: true})
     country: string;
 
-    @Column({ type: "text" })
+    @Column({ type: "text", nullable: true})
     address: string;
 
-    @Column({ length: 50 })
+    @Column({ length: 50 , nullable:true})
     city: string;
 
     @OneToMany(() => Order, order => order.user)

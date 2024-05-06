@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./users.entity"; // Importa la entidad User
-import { UserDto } from "./user.dto";
+import { CreateUserDto } from "./user.dto";
 
 @Injectable()
 export class UsersRepository {
@@ -21,6 +21,10 @@ export class UsersRepository {
             relations: ['orders'],  });
     
     };
+    //Trae todos los usuarios de dicho pais
+    async getUserByCountry(country: string): Promise<User[]>{
+        return this.userRepository.find({where:{country}});
+    }
     //Trae a los usuarios que estan entre el offset y el limit
     async getUsersPaginated(offset: number, limit: number): Promise<User[]> {
         return this.userRepository.find({
@@ -33,7 +37,7 @@ export class UsersRepository {
         return this.userRepository.count();
     }
     //Crea un nuevo usuario usando un dto que no contiene el id
-    async createUser(userDto: UserDto): Promise<User> {
+    async createUser(userDto: CreateUserDto): Promise<User> {
         const newUser: User = this.userRepository.create(userDto);
         return this.userRepository.save(newUser);
     }
