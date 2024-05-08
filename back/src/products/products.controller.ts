@@ -1,4 +1,4 @@
-import { UseGuards, Controller, Get, Post, Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException } from "@nestjs/common";
+import { UseGuards, Controller, Get, Post, Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException, Query } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { Product } from "./products.entity";
 import { ProductDto } from "./products.dto";
@@ -77,7 +77,7 @@ export class ProductsController {
     @Put(':id')
     @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.OK)
-    async updateProduct(@Param('id') id: string, @Body() productDto: ProductDto): Promise<Product> {
+    async updateProduct(@Param('id') id: string, @Body() productDto: Partial<Product>): Promise<Product> {
         try {
             if (!productDto.name && !productDto.description && !productDto.price && !productDto.stock && !productDto.imgUrl) {
                 throw new BadRequestException('At least one field to update must be provided');

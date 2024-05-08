@@ -1,5 +1,6 @@
-import { Controller, Get, InternalServerErrorException, Logger } from "@nestjs/common";
+import { Controller, Get, InternalServerErrorException, Logger, Post } from "@nestjs/common";
 import { CategoriesServices } from "./categories.service";
+import { Category } from "./categories.entity";
 
 @Controller('categories')
 export class CategoriesControllers {
@@ -17,6 +18,28 @@ export class CategoriesControllers {
         }
     }
 
+    @Post()
+    async createCategory(categoryName:Partial<Category>){
+        try {
+            return await this.categoriesServices.createCategory(categoryName)
+        }
+        catch (error){
+            this.logger.error(`Error al crear la categoria: ${error.message}`)
+            throw new InternalServerErrorException('Error interno al crear la categoría');
+        }
+    }
+    @Get(':id')
+    async getCategoryById(id:string){
+        try { 
+            return await this.categoriesServices.getCategoryById(id)
+            
+        } catch (error) {
+            this.logger.error(`Error al buscar la categoria por id: ${error.message}`)
+            throw new InternalServerErrorException('Error interno al buscar la categoría por id')
+        }
+
+    }
+     
     @Get()
     async getCategories() {
         try {

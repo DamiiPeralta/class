@@ -4,6 +4,7 @@ export class ProductDto {
     readonly price: number;
     readonly stock: number;
     readonly imgUrl: string;
+    readonly category: string;
     // Puedes agregar más propiedades según sea necesario
 
     constructor(partial: Partial<ProductDto>) {

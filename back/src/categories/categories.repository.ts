@@ -12,10 +12,17 @@ export class CategoriesRepository {
         private categoriesRepository: Repository<Category>
     )
     {}
+
     async getCategories(){
         return await this.categoriesRepository.find()
     }
-
+    async getCategoryById(id:string): Promise<Category>{
+        return await this.categoriesRepository.findOne({where:{id:id}})
+    }
+    async createCategory(categoryName:Partial<Category>){
+        const newCategory = await this.categoriesRepository.create(categoryName)
+        return this.categoriesRepository.save(newCategory);
+    }
     async addCategories(): Promise<string> {
         data?.map(async (element) => {
           await this.categoriesRepository
