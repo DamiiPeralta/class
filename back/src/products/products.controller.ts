@@ -1,4 +1,4 @@
-import { UseGuards, Controller, Get, Post, Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException } from "@nestjs/common";
+import { UseGuards, Controller, Get, Post, Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { Product } from "./products.entity";
 import { ProductDto } from "./products.dto";
@@ -9,55 +9,97 @@ export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
 
     @Get()
-    
     @HttpCode(HttpStatus.OK)
     async getProducts(): Promise<Product[]> {
-        return await this.productsService.getProducts();
+        try {
+            return await this.productsService.getProducts();
+        } catch (error) {
+            throw new InternalServerErrorException('Error interno al obtener productos');
+        }
     }
 
     @Get(':name/stock')
     async getStockOfProduct(@Param('name') name: string): Promise<string>{
-        const productName = name.replace(/-/g, ' ');
-        console.log(productName)
-        return await this.productsService.getStockOfProduct(productName);
+        try {
+            const productName = name.replace(/-/g, ' ');
+            return await this.productsService.getStockOfProduct(productName);
+        } catch (error) {
+            throw new InternalServerErrorException('Error interno al obtener el stock del producto');
+        }
     }
 
     @Get('seeder')
     @HttpCode(HttpStatus.CREATED)
     async getAddHardProduct(){
-        return await this.productsService.addHardProduct();
+        try {
+            return await this.productsService.addHardProduct();
+        } catch (error) {
+            throw new InternalServerErrorException('Error interno al añadir un producto');
+        }
     }
     
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     async getProductById(@Param('id') id: string): Promise<Product> {
-        return await this.productsService.getProductById(id);
+        try {
+            const product = await this.productsService.getProductById(id);
+            if (!product) {
+                throw new NotFoundException(`Producto con ID '${id}' no encontrado`);
+            }
+            return product;
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error; // Propagar NotFoundException sin modificar
+            } else {
+                throw new InternalServerErrorException('Error interno al obtener el producto');
+            }
+        }
     }
 
     @Post()
     @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.CREATED)
     async createProduct(@Body() productDto: ProductDto): Promise<Product> {
-        if (!productDto.name || !productDto.description || !productDto.price || !productDto.stock || !productDto.imgUrl) {
-            throw new BadRequestException('Name, description, price, stock, and imgUrl are required');
+        try {
+            if (!productDto.name || !productDto.description || !productDto.price || !productDto.stock || !productDto.imgUrl) {
+                throw new BadRequestException('Name, description, price, stock, and imgUrl are required');
+            }
+            return await this.productsService.createProduct(productDto);
+        } catch (error) {
+            if (error instanceof BadRequestException) {
+                throw error; // Propagar BadRequestException sin modificar
+            } else {
+                throw new InternalServerErrorException('Error interno al crear el producto');
+            }
         }
-        return await this.productsService.createProduct(productDto);
     }
 
     @Put(':id')
     @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.OK)
     async updateProduct(@Param('id') id: string, @Body() productDto: ProductDto): Promise<Product> {
-        if (!productDto.name && !productDto.description && !productDto.price && !productDto.stock && !productDto.imgUrl) {
-            throw new BadRequestException('At least one field to update must be provided');
+        try {
+            if (!productDto.name && !productDto.description && !productDto.price && !productDto.stock && !productDto.imgUrl) {
+                throw new BadRequestException('At least one field to update must be provided');
+            }
+            return await this.productsService.updateProduct(id, productDto);
+        } catch (error) {
+            if (error instanceof BadRequestException) {
+                throw error; // Propagar BadRequestException sin modificar
+            } else {
+                throw new InternalServerErrorException('Error interno al actualizar el producto');
+            }
         }
-        return await this.productsService.updateProduct(id, productDto);
     }
 
     @Delete(':id')
     @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.OK)
     async deleteProduct(@Param('id') id: string): Promise<void> {
-        return await this.productsService.deleteProduct(id);
+        try {
+            await this.productsService.deleteProduct(id);
+        } catch (error) {
+            throw new InternalServerErrorException('Error interno al eliminar el producto');
+        }
     }
 }

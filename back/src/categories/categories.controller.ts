@@ -1,17 +1,29 @@
-import { Controller, Get, } from "@nestjs/common";
+import { Controller, Get, InternalServerErrorException, Logger } from "@nestjs/common";
 import { CategoriesServices } from "./categories.service";
 
 @Controller('categories')
-export class CategoriesControllers{
-    constructor (private CategoriesServices:CategoriesServices){}
+export class CategoriesControllers {
+    private readonly logger = new Logger(CategoriesControllers.name);
+
+    constructor(private readonly categoriesServices: CategoriesServices) {}
 
     @Get('seeder')
-    addCategories(){
-        return this.CategoriesServices.addCategories()
+    async addCategories() {
+        try {
+            await this.categoriesServices.addCategories();
+        } catch (error) {
+            this.logger.error(`Error al agregar categorías: ${error.message}`);
+            throw new InternalServerErrorException('Error interno al agregar categorías');
+        }
     }
-    //
+
     @Get()
-    getCategories(){
-        return this.CategoriesServices.getCategories()
+    async getCategories() {
+        try {
+            return await this.categoriesServices.getCategories();
+        } catch (error) {
+            this.logger.error(`Error al obtener categorías: ${error.message}`);
+            throw new InternalServerErrorException('Error interno al obtener categorías');
+        }
     }
 }
