@@ -11,6 +11,7 @@ import { ProductsService } from './products/products.service';
 import { UsersService } from './users/users.service';
 import { OrdersService } from './orders/orders.service';
 import { CategoriesModule } from './categories/categories.module';
+import { FileUploadModule } from './file_upload/file_upload.module';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { CategoriesModule } from './categories/categories.module';
       useFactory:(configService: ConfigService) => 
       configService.get("typeorm")
     }),
-    UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule, CategoriesModule],
+    UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule, CategoriesModule, FileUploadModule],
   controllers: [],
   providers: [],
 })
