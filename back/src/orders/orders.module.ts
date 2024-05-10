@@ -13,6 +13,7 @@ import { User } from "src/users/users.entity";
 import { Product } from "src/products/products.entity";
 import { CategoriesRepository } from "src/categories/categories.repository";
 import { Category } from "src/categories/categories.entity";
+import { CategoriesServices } from "src/categories/categories.service";
 
 @Module({
     imports: [
@@ -30,7 +31,8 @@ import { Category } from "src/categories/categories.entity";
         UsersRepository,
         ProductsRepository,
         OrdersService,
-        CategoriesRepository
+        CategoriesRepository,
+        CategoriesServices
     ],
     controllers: [OrdersController]
 })

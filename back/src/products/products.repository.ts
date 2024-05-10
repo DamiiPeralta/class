@@ -5,6 +5,7 @@ import { Product } from "./products.entity";
 import { ProductDto } from "./products.dto";
 import * as data from "../utils/data.json";
 import { Category } from "src/categories/categories.entity";
+import { CategoriesServices } from "src/categories/categories.service";
 
 @Injectable()
 export class ProductsRepository {
@@ -12,7 +13,8 @@ export class ProductsRepository {
         @InjectRepository(Product)
         private readonly productsRepository: Repository<Product>,
         @InjectRepository(Category)
-        private categoriesRepository: Repository<Category>
+        private categoriesRepository: Repository<Category>,
+        private readonly categoriesServices: CategoriesServices
     ){}
 
     async getProducts(): Promise<Product[]> {
@@ -36,11 +38,29 @@ export class ProductsRepository {
     }
 
     async createProduct(productDto: ProductDto): Promise<Product> {
-        const newProduct = this.productsRepository.create(productDto);
+        let category = new Category();
+        category.name = productDto.category
+        const categoryProduct = await this.categoriesRepository.findOne({where:{name:category.name}});
+        if(!categoryProduct){
+            const newCategory = await this.categoriesServices.createCategory(category)
+            category= newCategory
+        } else {
+            category = categoryProduct
+        }
+        console.log(category)
+        let product = new Product()
+        product.name = productDto.name
+        product.description = productDto.description
+        product.price = productDto.price
+        product.stock = productDto.stock
+        product.imgUrl = productDto.imgUrl
+        product.category = category
+        console.log(product)
+        const newProduct = this.productsRepository.create(product);
         return this.productsRepository.save(newProduct);
     }
 
-    async updateProduct(id: string, productDto: ProductDto): Promise<Product> {
+    async updateProduct(id: string, productDto: Partial<Product>): Promise<Product> {
         const product = await this.getProductById(id);
         this.productsRepository.merge(product, productDto);
         return this.productsRepository.save(product);
