@@ -59,4 +59,12 @@ export class UsersRepository {
         await this.userRepository.remove(user);
         return await user
     }
+
+    async getUserByEmail(email: string){
+        return this.userRepository.findOne({where:{email}});
+    }
+    async getUserByName(name:string){
+        return this.userRepository.findOne({where:{name}})
+    }
+
 }

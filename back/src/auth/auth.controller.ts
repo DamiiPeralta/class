@@ -1,15 +1,28 @@
 import { Controller, Post, Body, BadRequestException, Logger, InternalServerErrorException } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginUserDto } from "./loginUserDto.dto";
+import { CreateUserDto } from "src/users/user.dto";
+import { UsersService } from "src/users/users.service";
+import { User } from "src/users/users.entity";
 
 @Controller("auth")
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService,
+        private readonly userService: UsersService
+    ) {}
 
     private readonly logger = new Logger(AuthController.name);
-
+    @Post("signup")
+    createUser(
+        @Body()user:CreateUserDto
+    ){
+        const newUser = this.authService.signUp(user);
+        const userWithoutPassword = user ;
+        delete userWithoutPassword.password;
+        return userWithoutPassword
+    }
     @Post("signin")
-    async signIn(@Body() loginUserDto: LoginUserDto): Promise<{ token: string }> {
+    async signIn(@Body() loginUserDto: LoginUserDto) {
         
         
         try {

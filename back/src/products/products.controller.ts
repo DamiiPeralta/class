@@ -57,7 +57,6 @@ export class ProductsController {
     }
 
     @Post()
-    @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.CREATED)
     async createProduct(@Body() productDto: ProductDto): Promise<Product> {
         try {

@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Param, Get, NotFoundException, InternalServerErrorException, Logger } from "@nestjs/common";
+import { Controller, Post, Body, Param, Get, NotFoundException, InternalServerErrorException, Logger, UseGuards } from "@nestjs/common";
 import { OrdersService } from "./orders.service"
 import { Order } from "./orders.entity";
 import { CreateOrderDto } from "./createOrderDto.Dto";
+import { AuthGuard } from "src/auth/auth.guard";
 
 @Controller("orders")
 export class OrdersController {
@@ -10,6 +11,7 @@ export class OrdersController {
     constructor(private readonly ordersService: OrdersService) {}
 
     @Post()
+    @UseGuards(AuthGuard)
     async createOrder(@Body() createOrderDto:CreateOrderDto): Promise<Order> {
         try {
             return await this.ordersService.addOrder(createOrderDto);
@@ -30,6 +32,7 @@ export class OrdersController {
     }
 
     @Get(":id")
+    @UseGuards(AuthGuard)
     async getOrderById(@Param("id") id: string): Promise<Order> {
         try {
             const order = await this.ordersService.getOrder(id);

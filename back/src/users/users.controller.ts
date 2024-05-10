@@ -1,4 +1,4 @@
-import { UseGuards, Controller, Get, Post, Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException, Query } from "@nestjs/common";
+import { UseGuards, Controller, Get,Req, Post, Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException, Query, Headers } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { User } from "./users.entity";
 import { CreateUserDto } from "./user.dto";
@@ -13,12 +13,18 @@ export class UsersController {
 
     @Get()
     @UseGuards(AuthGuard)
-    async getUsers(@Query('page') page: number, @Query('limit') limit: number): Promise<{ users: User[], totalPages: number, totalCount: number }> {
+    async getUsers(@Query('page') page: number, @Query('limit') limit: number): Promise<{ users: any[], totalPages: number, totalCount: number }> {
         try {
             return await this.usersService.getUsers(page, limit);
         } catch (error) {
             throw new InternalServerErrorException('Error interno al obtener usuarios');
         }
+    }
+    @Get("profile")
+    @UseGuards(AuthGuard)
+    getUserProfile(@Req() request: Request & {user:any}){
+        console.log(request.user)
+        return "Este enpoint retorne el perfil del usuario"
     }
 
     @Get(':country')

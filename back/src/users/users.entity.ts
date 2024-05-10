@@ -12,7 +12,7 @@ export class User {
     @Column({ unique: true, length: 50 })
     email: string;
 
-    @Column({ length: 20 })
+    @Column()
     password: string;
 
     @Column({ type: "int" , nullable:true })
