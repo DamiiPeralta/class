@@ -5,8 +5,10 @@ import { ProductDto } from "./products.dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/decorators/roles.decorator";
 import { Role } from "src/auth/roles.enum";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 @Controller("products")
+@ApiTags("Products")
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
 
@@ -58,8 +60,9 @@ export class ProductsController {
             }
         }
     }
-
+    @ApiBearerAuth()
     @Post()
+    @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
     async createProduct(@Body() productDto: ProductDto): Promise<Product> {
@@ -76,7 +79,7 @@ export class ProductsController {
             }
         }
     }
-
+    @ApiBearerAuth()
     @Put(':id')
     @UseGuards(AuthGuard) 
     @Roles(Role.Admin)
@@ -95,7 +98,7 @@ export class ProductsController {
             }
         }
     }
-
+    @ApiBearerAuth()
     @Delete(':id')
     @UseGuards(AuthGuard)
     @Roles(Role.Admin) 

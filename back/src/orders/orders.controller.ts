@@ -5,13 +5,15 @@ import { CreateOrderDto } from "./createOrderDto.Dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/decorators/roles.decorator";
 import { Role } from "src/auth/roles.enum";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 @Controller("orders")
+@ApiTags("Order")
 export class OrdersController {
     private readonly logger = new Logger(OrdersController.name);
 
     constructor(private readonly ordersService: OrdersService) {}
-
+    @ApiBearerAuth()
     @Post()
     @UseGuards(AuthGuard)
     async createOrder(@Body() createOrderDto:CreateOrderDto): Promise<Order> {
@@ -22,7 +24,8 @@ export class OrdersController {
             throw new InternalServerErrorException('Error interno al crear la orden');
         }
     }
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Get()
     @Roles(Role.Admin)
     async getOrders(): Promise<Order[]> {
@@ -33,7 +36,7 @@ export class OrdersController {
             throw new InternalServerErrorException('Error interno al obtener las órdenes');
         }
     }
-
+    @ApiBearerAuth()
     @Get(":id")
     @UseGuards(AuthGuard)
     async getOrderById(@Param("id") id: string): Promise<Order> {

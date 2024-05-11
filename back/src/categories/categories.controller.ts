@@ -1,8 +1,10 @@
 import { Controller, Get, InternalServerErrorException, Logger, Post } from "@nestjs/common";
 import { CategoriesServices } from "./categories.service";
 import { Category } from "./categories.entity";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller('categories')
+@ApiTags("Categories")
 export class CategoriesControllers {
     private readonly logger = new Logger(CategoriesControllers.name);
 

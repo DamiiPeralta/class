@@ -7,13 +7,15 @@ import { UsersDbService } from "./usersDb.service";
 import { Role } from "src/auth/roles.enum";
 import { Roles } from "src/decorators/roles.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 @Controller("users")
+@ApiTags("Users")
 export class UsersController {
     constructor(private readonly usersService: UsersService,
                 private readonly usersDbService: UsersDbService
     ) {}
-
+    @ApiBearerAuth()
     @Get("admin")
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(Role.Admin)
@@ -21,6 +23,7 @@ export class UsersController {
     getAdmin(){
         return "Ruta protegida"
     }
+    @ApiBearerAuth()
     @Get()
     @UseGuards(AuthGuard)
     @Roles(Role.Admin)
@@ -31,13 +34,14 @@ export class UsersController {
             throw new InternalServerErrorException('Error interno al obtener usuarios');
         }
     }
+    @ApiBearerAuth()
     @Get("profile")
     @UseGuards(AuthGuard)
     getUserProfile(@Req() request: Request & {user:any}){
         console.log(request.user)
         return "Este enpoint retorne el perfil del usuario"
     }
-
+    @ApiBearerAuth()
     @Get(':country')
     @UseGuards(AuthGuard)
     async getUserByCountry(@Param('country') country: string): Promise<User[]> {
@@ -48,7 +52,7 @@ export class UsersController {
             throw new InternalServerErrorException('Error interno al obtener usuarios por país');
         }
     }
-
+    @ApiBearerAuth()
     @Get(':id')
     @UseGuards(AuthGuard)
     async getUserById(@Param('id') id: string){
@@ -67,7 +71,7 @@ export class UsersController {
         }
     }
     
-
+    @ApiBearerAuth()
     @Put(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
@@ -85,7 +89,7 @@ export class UsersController {
             }
         }
     }
-
+    @ApiBearerAuth()
     @Delete(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
