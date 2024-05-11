@@ -3,6 +3,8 @@ import { OrdersService } from "./orders.service"
 import { Order } from "./orders.entity";
 import { CreateOrderDto } from "./createOrderDto.Dto";
 import { AuthGuard } from "src/auth/auth.guard";
+import { Roles } from "src/decorators/roles.decorator";
+import { Role } from "src/auth/roles.enum";
 
 @Controller("orders")
 export class OrdersController {
@@ -22,6 +24,7 @@ export class OrdersController {
     }
 
     @Get()
+    @Roles(Role.Admin)
     async getOrders(): Promise<Order[]> {
         try {
             return await this.ordersService.getOrders();

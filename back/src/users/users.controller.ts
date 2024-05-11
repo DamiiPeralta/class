@@ -4,6 +4,9 @@ import { User } from "./users.entity";
 import { CreateUserDto } from "./user.dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import { UsersDbService } from "./usersDb.service";
+import { Role } from "src/auth/roles.enum";
+import { Roles } from "src/decorators/roles.decorator";
+import { RolesGuard } from "src/auth/roles.guard";
 
 @Controller("users")
 export class UsersController {
@@ -11,8 +14,16 @@ export class UsersController {
                 private readonly usersDbService: UsersDbService
     ) {}
 
+    @Get("admin")
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @HttpCode(HttpStatus.OK)
+    getAdmin(){
+        return "Ruta protegida"
+    }
     @Get()
     @UseGuards(AuthGuard)
+    @Roles(Role.Admin)
     async getUsers(@Query('page') page: number, @Query('limit') limit: number): Promise<{ users: any[], totalPages: number, totalCount: number }> {
         try {
             return await this.usersService.getUsers(page, limit);
@@ -40,7 +51,7 @@ export class UsersController {
 
     @Get(':id')
     @UseGuards(AuthGuard)
-    async getUserById(@Param('id') id: string): Promise<User> {
+    async getUserById(@Param('id') id: string){
         try {
             const user = await this.usersService.getUserById(id);
             if (!user) {
@@ -55,28 +66,12 @@ export class UsersController {
             }
         }
     }
-
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-        try {
-            if (!createUserDto.name || !createUserDto.email || !createUserDto.password) {
-                throw new BadRequestException('Name, email, and password are required');
-            }
-            return await this.usersService.createUser(createUserDto);
-        } catch (error) {
-            if (error instanceof BadRequestException) {
-                throw error; // Propagar BadRequestException sin modificar
-            } else {
-                throw new InternalServerErrorException('Error interno al crear el usuario');
-            }
-        }
-    }
+    
 
     @Put(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    async updateUser(@Param('id') id: string, @Body() updateUserDto: Partial<User>): Promise<User> {
+    async updateUser(@Param('id') id: string, @Body() updateUserDto: Partial<User>){
         try {
             if (!updateUserDto.name && !updateUserDto.email && !updateUserDto.password && !updateUserDto.address) {
                 throw new BadRequestException('At least one field to update must be provided');

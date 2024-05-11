@@ -6,6 +6,7 @@ import { UsersService } from "src/users/users.service";
 import { User } from "src/users/users.entity";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
+import { Role } from "./roles.enum";
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async signUp(user:CreateUserDto){
+    async signUp(user:CreateUserDto, createdAt:string){
         const hashedPassword = await bcrypt.hash(user.password, 10)
         const dbUser = await this.usersService.getUserByEmail(user.email)
         console.log(dbUser)
@@ -28,7 +29,7 @@ export class AuthService {
             ...user,
             password: hashedPassword
         };
-        this.usersService.createUser(newUser)
+        this.usersService.createUser(newUser, createdAt)
         
         return {success: "User created succesfully"};
     }
@@ -49,7 +50,9 @@ export class AuthService {
         const userPayload = {
             sub: dbUser.id,
             id: dbUser.id,
-            email: dbUser.email
+            email: dbUser.email,
+            //isAdmin: dbUser.isAdmin
+            roles:[dbUser.isAdmin ? Role.Admin : Role.User]
         };
 
         const token = this.jwtService.sign(userPayload)

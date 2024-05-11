@@ -3,6 +3,8 @@ import { ProductsService } from "./products.service";
 import { Product } from "./products.entity";
 import { ProductDto } from "./products.dto";
 import { AuthGuard } from "src/auth/auth.guard";
+import { Roles } from "src/decorators/roles.decorator";
+import { Role } from "src/auth/roles.enum";
 
 @Controller("products")
 export class ProductsController {
@@ -30,6 +32,7 @@ export class ProductsController {
 
     @Get('seeder')
     @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
     async getAddHardProduct(){
         try {
             return await this.productsService.addHardProduct();
@@ -58,6 +61,7 @@ export class ProductsController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
     async createProduct(@Body() productDto: ProductDto): Promise<Product> {
         try {
             if (!productDto.name || !productDto.description || !productDto.price || !productDto.stock || !productDto.imgUrl) {
@@ -75,6 +79,7 @@ export class ProductsController {
 
     @Put(':id')
     @UseGuards(AuthGuard) 
+    @Roles(Role.Admin)
     @HttpCode(HttpStatus.OK)
     async updateProduct(@Param('id') id: string, @Body() productDto: Partial<Product>): Promise<Product> {
         try {
@@ -92,7 +97,8 @@ export class ProductsController {
     }
 
     @Delete(':id')
-    @UseGuards(AuthGuard) 
+    @UseGuards(AuthGuard)
+    @Roles(Role.Admin) 
     @HttpCode(HttpStatus.OK)
     async deleteProduct(@Param('id') id: string): Promise<void> {
         try {

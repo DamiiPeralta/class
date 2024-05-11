@@ -26,6 +26,11 @@ export class User {
 
     @Column({ length: 50 , nullable:true})
     city: string;
+    @Column({default:false})
+    isAdmin:boolean;
+
+    @Column({nullable:true})
+    createdAt:string;
 
     @OneToMany(() => Order, order => order.user)
     @JoinColumn({name:"order_id"})

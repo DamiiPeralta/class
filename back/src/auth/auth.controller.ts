@@ -1,4 +1,4 @@
-import { Controller, Post, Body, BadRequestException, Logger, InternalServerErrorException } from "@nestjs/common";
+import { Controller, Post, Body, BadRequestException, Logger, InternalServerErrorException, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginUserDto } from "./loginUserDto.dto";
 import { CreateUserDto } from "src/users/user.dto";
@@ -14,15 +14,21 @@ export class AuthController {
     private readonly logger = new Logger(AuthController.name);
     @Post("signup")
     createUser(
-        @Body()user:CreateUserDto
+        @Body()user:CreateUserDto,
+        @Req() request: Request & {now: string }
     ){
-        const newUser = this.authService.signUp(user);
+        const createdAt = new Date()
+    
+        const newUser = this.authService.signUp(user, createdAt.toString());
+        console.log(createdAt.toString())
         const userWithoutPassword = user ;
         delete userWithoutPassword.password;
-        return userWithoutPassword
+        return {userWithoutPassword, createdAt: createdAt}
     }
     @Post("signin")
-    async signIn(@Body() loginUserDto: LoginUserDto) {
+    async signIn(
+        @Body() loginUserDto: LoginUserDto
+        ) {
         
         
         try {

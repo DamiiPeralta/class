@@ -7,9 +7,9 @@ import { UsersRepository } from "./users.repository";
 export class UsersService {
     constructor(private readonly usersRepository: UsersRepository) {}
 
-    async createUser(createUserDto: CreateUserDto): Promise<User> {
-        const newUser = await this.usersRepository.createUser(createUserDto);
-        return newUser;
+    async createUser(createUserDto: CreateUserDto, createdAt:string) {
+        const newUser = await this.usersRepository.createUser(createUserDto, createdAt);
+        return {newUser, createdAt};
     }
 
     async getUsers(page: number = 1, limit: number = 5): Promise<{ users: any[], totalPages: number, totalCount: number }> {
@@ -48,8 +48,11 @@ export class UsersService {
         return await this.usersRepository.getUserById(id);
     }
 
-    async updateUser(id: string, updateUserDto: Partial<User>): Promise<User> {
-        return await this.usersRepository.updateUser(id, updateUserDto);
+    async updateUser(id: string, updateUserDto: Partial<User>) {
+        const user = await this.usersRepository.updateUser(id, updateUserDto);
+        const { password,isAdmin, ...userWithoutPassword } = user;
+        return userWithoutPassword
+
     }
 
     async deleteUser(id: string): Promise<User> {

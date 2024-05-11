@@ -1,4 +1,4 @@
-import { IsEmail, IsInt, IsNotEmpty , IsString, Length, Matches } from "class-validator";
+import { IsEmail, IsEmpty, IsInt, IsNotEmpty , IsString, Length, Matches } from "class-validator";
 
 export class CreateUserDto {
     @IsNotEmpty()
@@ -27,6 +27,8 @@ export class CreateUserDto {
     @IsString()
     @Length(3,20)
     city?: string;
+    @IsEmpty()  
+    isAdmin:boolean;
 
     constructor(partial: Partial<CreateUserDto>) {
         Object.assign(this, partial);

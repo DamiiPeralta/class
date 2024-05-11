@@ -37,9 +37,11 @@ export class UsersRepository {
         return this.userRepository.count();
     }
     //Crea un nuevo usuario usando un dto que no contiene el id
-    async createUser(userDto: CreateUserDto): Promise<User> {
+    async createUser(userDto: CreateUserDto, createdAt: string){
         const newUser: User = this.userRepository.create(userDto);
-        return this.userRepository.save(newUser);
+        newUser.createdAt = createdAt;
+        this.userRepository.save(newUser);
+        return {newUser, createdAt}
     }
     //Actualiza un usuario (Recibe como parametro ID de usuario a modificar y el campo a modificar)
     async updateUser(id: string, updateUserDto: Partial<User>): Promise<User> {
