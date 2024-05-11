@@ -22,7 +22,6 @@ export class AuthController {
         const createdAt = new Date()
     
         const newUser = this.authService.signUp(user, createdAt.toString());
-        console.log(createdAt.toString())
         const userWithoutPassword = user ;
         delete userWithoutPassword.password;
         return {userWithoutPassword, createdAt: createdAt}
