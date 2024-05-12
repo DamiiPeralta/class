@@ -38,16 +38,20 @@ export class UsersController {
     @Get("profile")
     @UseGuards(AuthGuard)
     getUserProfile(@Req() request: Request & {user:any}){
-        console.log(request.user)
         return "Este enpoint retorne el perfil del usuario"
     }
     @ApiBearerAuth()
     @Get(':country')
     @UseGuards(AuthGuard)
-    async getUserByCountry(@Param('country') country: string): Promise<User[]> {
+    async getUsersByCountry(@Param('country') country: string): Promise<User[]> {
         try {
             const countryName = country.replace(/-/g, ' ');
-            return await this.usersService.getUserByCountry(countryName);
+            const countryUsers = await this.usersService.getUsersByCountry(countryName);
+            if(countryUsers.length > 0){
+                return countryUsers
+            }else {
+                throw  new NotFoundException("No hay usuarios con esa nacionalidad")
+            }
         } catch (error) {
             throw new InternalServerErrorException('Error interno al obtener usuarios por país');
         }
@@ -64,7 +68,7 @@ export class UsersController {
             return user;
         } catch (error) {
             if (error instanceof NotFoundException) {
-                throw error; // Propagar NotFoundException sin modificar
+                throw error;
             } else {
                 throw new InternalServerErrorException('Error interno al obtener el usuario');
             }
@@ -83,7 +87,7 @@ export class UsersController {
             return await this.usersService.updateUser(id, updateUserDto);
         } catch (error) {
             if (error instanceof BadRequestException) {
-                throw error; // Propagar BadRequestException sin modificar
+                throw error;
             } else {
                 throw new InternalServerErrorException('Error interno al actualizar el usuario');
             }
@@ -95,7 +99,6 @@ export class UsersController {
     @HttpCode(HttpStatus.OK)
     async deleteUser(@Param('id') id: string): Promise<User> {
         try {
-            console.log(id);
             const user = await this.usersService.deleteUser(id);
             if (!user) {
                 throw new NotFoundException(`Usuario con ID '${id}' no encontrado`);
@@ -103,7 +106,7 @@ export class UsersController {
             return user;
         } catch (error) {
             if (error instanceof NotFoundException) {
-                throw error; // Propagar NotFoundException sin modificar
+                throw error;
             } else {
                 throw new InternalServerErrorException('Error interno al eliminar el usuario');
             }

@@ -15,10 +15,9 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async signUp(user:CreateUserDto, createdAt:string){
+    async createUser(user:CreateUserDto, createdAt:string){
         const hashedPassword = await bcrypt.hash(user.password, 10)
         const dbUser = await this.usersService.getUserByEmail(user.email)
-        console.log(dbUser)
         if(dbUser){
             throw new BadRequestException("Email already exist");
         }
@@ -38,7 +37,6 @@ export class AuthService {
 
         // Extraemos las credenciales del objeto UserDto
         const { email, password } = loginUserDto;
-        console.log(email, password)
         const dbUser = await this.usersService.getUserByEmail(email)
         if(!dbUser){
             throw new BadRequestException("User not found")

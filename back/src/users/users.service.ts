@@ -33,8 +33,8 @@ export class UsersService {
         return await { users:usersWithoutPassword, totalPages, totalCount };
     }
 
-    async getUserByCountry(country:string) {
-        return await this.usersRepository.getUserByCountry(country);
+    async getUsersByCountry(country:string) {
+        return await this.usersRepository.getUsersByCountry(country);
     }
     async getUserByEmail(email: string){
         return await this.usersRepository.getUserByEmail(email);

@@ -92,7 +92,7 @@ export class ProductsController {
             return await this.productsService.updateProduct(id, productDto);
         } catch (error) {
             if (error instanceof BadRequestException) {
-                throw error; // Propagar BadRequestException sin modificar
+                throw error;
             } else {
                 throw new InternalServerErrorException('Error interno al actualizar el producto');
             }

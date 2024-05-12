@@ -38,8 +38,10 @@ export class ProductsRepository {
     }
 
     async createProduct(productDto: ProductDto): Promise<Product> {
+        
         let category = new Category();
         category.name = productDto.category
+        
         const categoryProduct = await this.categoriesRepository.findOne({where:{name:category.name}});
         if(!categoryProduct){
             const newCategory = await this.categoriesServices.createCategory(category)
@@ -47,7 +49,7 @@ export class ProductsRepository {
         } else {
             category = categoryProduct
         }
-        console.log(category)
+
         let product = new Product()
         product.name = productDto.name
         product.description = productDto.description
@@ -55,7 +57,7 @@ export class ProductsRepository {
         product.stock = productDto.stock
         product.imgUrl = productDto.imgUrl
         product.category = category
-        console.log(product)
+
         const newProduct = this.productsRepository.create(product);
         return this.productsRepository.save(newProduct);
     }
@@ -79,7 +81,6 @@ export class ProductsRepository {
                 const category = categories.find(
                     (category) => category.name === element.category,
                   );
-                console.log(category)
                 if(category != null)
                     {
                         
@@ -93,7 +94,6 @@ export class ProductsRepository {
                 product.category= category
 
                 delete product.id;
-                console.log(product)
                 await this.productsRepository
                 
                     .createQueryBuilder()

@@ -16,12 +16,11 @@ export class AuthController {
     private readonly logger = new Logger(AuthController.name);
     @Post("signup")
     createUser(
-        @Body()user:CreateUserDto,
-        @Req() request: Request & {now: string }
+        @Body()user:CreateUserDto
     ){
         const createdAt = new Date()
     
-        const newUser = this.authService.signUp(user, createdAt.toString());
+        this.authService.createUser(user, createdAt.toString());
         const userWithoutPassword = user ;
         delete userWithoutPassword.password;
         return {userWithoutPassword, createdAt: createdAt}

@@ -20,7 +20,6 @@ export class OrderRepository {
     ) {}
 
     async addOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-    console.log(createOrderDto)
     // Buscar al usuario por su ID
     const user = await this.usersService.getUserById(createOrderDto.userId);
     if (!user) {
@@ -41,7 +40,6 @@ export class OrderRepository {
     for (const product of createOrderDto.products) {
         // Buscar el producto por su ID en la base de datos
         const productInDB = await this.productsService.getProductById(product.id);
-        console.log(product.id)
         if (productInDB && productInDB.stock > 0) {
             // Restar una unidad del stock del producto utilizando el servicio de productos
             productInDB.stock -= 1;
@@ -49,8 +47,6 @@ export class OrderRepository {
 
             // Sumar el precio del producto al precio total de la orden
             orderDetails.price += productInDB.price;
-            console.log(productInDB)
-            console.log(orderDetails)
             // Agregar el producto al detalle de la orden
             orderDetails.products.push(productInDB);
         }

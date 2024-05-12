@@ -22,7 +22,7 @@ export class UsersRepository {
     
     };
     //Trae todos los usuarios de dicho pais
-    async getUserByCountry(country: string): Promise<User[]>{
+    async getUsersByCountry(country: string): Promise<User[]>{
         return this.userRepository.find({where:{country}});
     }
     //Trae a los usuarios que estan entre el offset y el limit
