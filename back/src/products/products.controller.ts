@@ -5,7 +5,8 @@ import { ProductDto } from "./products.dto";
 import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/decorators/roles.decorator";
 import { Role } from "src/auth/roles.enum";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
+import { RolesGuard } from "src/auth/roles.guard";
 
 @Controller("products")
 @ApiTags("Products")
@@ -81,6 +82,7 @@ export class ProductsController {
     }
     @ApiBearerAuth()
     @Put(':id')
+    @ApiBody({})
     @UseGuards(AuthGuard) 
     @Roles(Role.Admin)
     @HttpCode(HttpStatus.OK)
@@ -100,8 +102,8 @@ export class ProductsController {
     }
     @ApiBearerAuth()
     @Delete(':id')
-    @UseGuards(AuthGuard)
-    @Roles(Role.Admin) 
+    @UseGuards(AuthGuard , RolesGuard)
+    @Roles(Role.SuperAdmin) 
     @HttpCode(HttpStatus.OK)
     async deleteProduct(@Param('id') id: string): Promise<void> {
         try {

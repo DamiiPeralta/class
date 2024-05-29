@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { Order } from './orders.entity';
-import { Injectable} from '@nestjs/common';
+import { Injectable, InternalServerErrorException} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { OrderDetails } from 'src/orders/orderDetails.entity';
 import { Product } from '../products/products.entity';
@@ -26,6 +26,7 @@ export class OrderRepository {
         throw new Error('Usuario no encontrado');
     }
 
+    
     // Crear una nueva orden
     const order = new Order();
     order.user = user;
@@ -40,7 +41,10 @@ export class OrderRepository {
     for (const product of createOrderDto.products) {
         // Buscar el producto por su ID en la base de datos
         const productInDB = await this.productsService.getProductById(product.id);
-        if (productInDB && productInDB.stock > 0) {
+        if (productInDB && productInDB.stock === 0){
+            throw new Error (`No hay stock disponible del producto ${product.name}`)
+
+        } else if (productInDB && productInDB.stock > 0) {
             // Restar una unidad del stock del producto utilizando el servicio de productos
             productInDB.stock -= 1;
             await this.productsService.updateProduct(product.id, productInDB);
@@ -49,8 +53,10 @@ export class OrderRepository {
             orderDetails.price += productInDB.price;
             // Agregar el producto al detalle de la orden
             orderDetails.products.push(productInDB);
-        }
+         } 
+        
     }
+
     // Guardar el detalle de la orden en la base de datos
     const savedOrderDetails = await this.orderDetailRepository.save(orderDetails);
 
@@ -64,9 +70,8 @@ export class OrderRepository {
     return savedOrder;
 
 
-}
+    }
 
-    
     async getOrders():Promise<Order[]> {
         const orders:Order[] = await this.orderRepository.find({
             relations:['user', 'orderDetails'],

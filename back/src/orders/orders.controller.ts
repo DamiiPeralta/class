@@ -6,6 +6,7 @@ import { AuthGuard } from "src/auth/auth.guard";
 import { Roles } from "src/decorators/roles.decorator";
 import { Role } from "src/auth/roles.enum";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { RolesGuard } from "src/auth/roles.guard";
 
 @Controller("orders")
 @ApiTags("Order")
@@ -25,9 +26,9 @@ export class OrdersController {
         }
     }
     @ApiBearerAuth()
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard,RolesGuard)
     @Get()
-    @Roles(Role.Admin)
+    @Roles(Role.Admin, Role.SuperAdmin)
     async getOrders(): Promise<Order[]> {
         try {
             return await this.ordersService.getOrders();
@@ -38,7 +39,8 @@ export class OrdersController {
     }
     @ApiBearerAuth()
     @Get(":id")
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(Role.Admin, Role.SuperAdmin)
     async getOrderById(@Param("id") id: string): Promise<Order> {
         try {
             const order = await this.ordersService.getOrder(id);

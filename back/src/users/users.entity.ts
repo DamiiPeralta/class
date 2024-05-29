@@ -76,6 +76,13 @@ export class User {
     @Column({default:false})
     isAdmin:boolean;
 
+    @ApiProperty({
+        description: "Indica si el usuario es superadmintrador",
+        example: false,
+    })
+    @Column({default: false})
+    isSuperAdmin: boolean;
+
     /** Fecha de creación del usuario */
     @ApiProperty({
         description: "Fecha de creación del usuario",

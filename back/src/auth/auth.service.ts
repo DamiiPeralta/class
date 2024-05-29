@@ -45,12 +45,15 @@ export class AuthService {
         if(!isPasswordValid){
             throw new BadRequestException("Invalid Password")
         }
+        console.log(dbUser.isAdmin , dbUser.isSuperAdmin)
         const userPayload = {
             sub: dbUser.id,
             id: dbUser.id,
             email: dbUser.email,
-            //isAdmin: dbUser.isAdmin
-            roles:[dbUser.isAdmin ? Role.Admin : Role.User]
+            roles:[
+             dbUser.isAdmin ? Role.Admin : Role.User,
+             dbUser.isSuperAdmin ? Role.SuperAdmin : null
+            ].filter(role => role !== null)
         };
 
         const token = this.jwtService.sign(userPayload)

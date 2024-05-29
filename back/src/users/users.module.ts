@@ -5,7 +5,6 @@ import { LoggerMiddleware } from "src/midldleware/logger.middelware";
 import { UsersRepository } from "./users.repository";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users.entity";
-import { UsersDbService } from "./usersDb.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([User])],

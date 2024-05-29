@@ -7,7 +7,7 @@ export class CreateUserDto {
     @IsEmail()
     @ApiProperty({
         description:"El email del usuario, debe tener como minimo 3 caracteres",
-        example:"damii@hotmail.com"
+        example:"franco@hotmail.com"
     })
     email: string;
     @IsNotEmpty()
@@ -15,7 +15,7 @@ export class CreateUserDto {
     @Length(3,80)
     @ApiProperty({
         description:"El nombre del usuario, debe tener como minimo 3 caracteres",
-        example:"Damian"
+        example:"franco"
     })
     name: string;
     @IsNotEmpty()
@@ -46,6 +46,12 @@ export class CreateUserDto {
         default: false
     }) 
     isAdmin:boolean;
+    @IsEmpty()
+    @ApiProperty({
+        description: "Asignado por default al momento de crear el usuario, no debe ser incluido en el body",
+        default: false
+    })
+    isSuperAdmin: boolean;
 
     constructor(partial: Partial<CreateUserDto>) {
         Object.assign(this, partial);
